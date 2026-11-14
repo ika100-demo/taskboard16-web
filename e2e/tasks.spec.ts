@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 
+// These specs assume the app runs with API_URL unset.
 // The e2e server runs without a reachable Task API (API_URL unset), i.e. "the Task API is down".
 
 test("AC-001.6 the start page loads with 200 and shows the load error and the form", async ({ page }) => {

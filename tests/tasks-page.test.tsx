@@ -69,9 +69,16 @@ describe("start page", () => {
     expect(screen.getByRole("form", { name: "Create task" })).toBeInTheDocument();
   });
 
-  it("AC-001.6 shows the load error on a timeout or connection error", async () => {
+  it("AC-001.6 shows the load error on a timeout", async () => {
     fetchMock.mockRejectedValue(new DOMException("timeout", "TimeoutError"));
     await renderPage();
     expect(screen.getByRole("alert")).toHaveTextContent(LOAD_ERROR);
+  });
+
+  it("AC-001.6 shows the load error on a connection error", async () => {
+    fetchMock.mockRejectedValue(new TypeError("fetch failed"));
+    await renderPage();
+    expect(screen.getByRole("alert")).toHaveTextContent(LOAD_ERROR);
+    expect(screen.getByRole("form", { name: "Create task" })).toBeInTheDocument();
   });
 });

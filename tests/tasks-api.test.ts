@@ -59,6 +59,26 @@ describe("listTasks", () => {
     expect(await listTasks()).toEqual({ ok: false });
   });
 
+  it("AC-001.6 passes an AbortSignal and gives ok:false when the 6 s bound elapses", async () => {
+    vi.useFakeTimers();
+    try {
+      fetchMock.mockImplementation(
+        (_url: unknown, init?: RequestInit) =>
+          new Promise((_resolve, reject) => {
+            const signal = init?.signal;
+            if (!(signal instanceof AbortSignal)) return; // never settles: the test fails on the assertion below
+            signal.addEventListener("abort", () => reject(signal.reason));
+          }),
+      );
+      const pending = listTasks();
+      await vi.advanceTimersByTimeAsync(6000);
+      expect(fetchMock.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal);
+      expect(await pending).toEqual({ ok: false });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("AC-001.6 gives ok:false when API_URL is unset", async () => {
     delete process.env.API_URL;
     expect(await listTasks()).toEqual({ ok: false });
@@ -81,6 +101,32 @@ describe("createTask", () => {
     await createTask({ title: "Call Anna", due_date: null });
     const body = JSON.parse(fetchMock.mock.calls[0][1].body);
     expect(body).toHaveProperty("due_date", null);
+  });
+
+  it("AC-001.3 sends the title exactly as entered, without trimming", async () => {
+    fetchMock.mockResolvedValue(json({ id: "9", title: "  Call Anna ", due_date: null }, 201));
+    await createTask({ title: "  Call Anna ", due_date: null });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).title).toBe("  Call Anna ");
+  });
+
+  it("AC-001.7 passes an AbortSignal and maps the elapsed 6 s bound to failed", async () => {
+    vi.useFakeTimers();
+    try {
+      fetchMock.mockImplementation(
+        (_url: unknown, init?: RequestInit) =>
+          new Promise((_resolve, reject) => {
+            const signal = init?.signal;
+            if (!(signal instanceof AbortSignal)) return;
+            signal.addEventListener("abort", () => reject(signal.reason));
+          }),
+      );
+      const pending = createTask({ title: "x", due_date: null });
+      await vi.advanceTimersByTimeAsync(6000);
+      expect(fetchMock.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal);
+      expect(await pending).toEqual({ kind: "failed" });
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("AC-001.5 maps 422 to invalid", async () => {

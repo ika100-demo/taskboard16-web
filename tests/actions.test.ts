@@ -30,6 +30,13 @@ describe("createTaskAction", () => {
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ title: "Call Anna", due_date: null });
   });
 
+  it("AC-001.3 posts a title with surrounding spaces exactly as entered", async () => {
+    const task = { id: "1", title: "  Call Anna ", due_date: null };
+    fetchMock.mockResolvedValue(new Response(JSON.stringify(task), { status: 201 }));
+    await createTaskAction({ title: "  Call Anna ", due_date: "" });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).title).toBe("  Call Anna ");
+  });
+
   it("AC-001.3 posts a YYYY-MM-DD due date", async () => {
     const task = { id: "1", title: "Call Anna", due_date: "2026-03-04" };
     fetchMock.mockResolvedValue(new Response(JSON.stringify(task), { status: 201 }));
