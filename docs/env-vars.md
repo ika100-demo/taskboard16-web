@@ -8,6 +8,7 @@ Configuration is read exclusively from environment variables. Defaults below are
 |---|---|---|
 | `PORT` | `3000` | HTTP port the server listens on. |
 | `NODE_ENV` | `production` (in the image) | Node environment. |
+| `API_URL` | _(unset — the start page shows the load-error message)_ | Base URL of the Task API; set in the cluster to `http://taskboard16-api` by the gitops repo. Server-side only, never `NEXT_PUBLIC_`. |
 
 ## Observability
 
