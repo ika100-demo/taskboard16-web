@@ -10,12 +10,14 @@ tasks:
     covers: [AC-001.1, AC-001.3, AC-001.5, AC-001.6, AC-001.7, AC-001.8]
     parallel_safe: true
     depends_on: []
+    done: true
   - id: t2
     title: Add shared title and due-date input checks
     files: [lib/task-input.ts]
     covers: [AC-001.3, AC-001.4]
     parallel_safe: true
     depends_on: []
+    done: true
   - id: t3
     title: Replace the starter page with the task list and create form
     files: [app/actions.ts, app/_components/task-board.tsx, app/page.tsx, app/globals.css, tests/page.test.tsx, e2e/home.spec.ts, e2e/smoke.spec.ts]
