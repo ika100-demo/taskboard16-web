@@ -1,7 +1,7 @@
 ---
 spec_id: 001-show-all-tasks-and-a-create-form-on-the
 title: Show all tasks and a create form on the Taskboard start page, backed by the Task API
-status: building
+status: done
 priority: P1
 shape: web-nextjs
 parent: ika100-demo/taskboard16-gitops:001-persistent-tasks-in-postgres-with-a-web
@@ -131,3 +131,4 @@ Tests stub the Task API at API_URL; no login (system A10).
 - 2026-11-14 created from the system plan, with its criteria (spec 147)
 - 2026-11-14 approved
 - 2026-11-14 building
+- 2026-11-14 done
