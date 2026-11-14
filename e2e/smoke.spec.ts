@@ -9,3 +9,8 @@ test("the root page loads at the base URL @smoke", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
+
+test("the start page shows the create task form @smoke", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("form", { name: "Create task" })).toBeVisible();
+});
